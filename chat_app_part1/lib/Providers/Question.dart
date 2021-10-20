@@ -1,42 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../Modules/Option.dart';
-import '../Modules/single_question.dart';
-class Question with ChangeNotifier{
-  List<SingleQuestion>_questions=[
+import 'Option.dart';
+import '../models/SingleQuestion.dart';
+class Question {
+   static List<SingleQuestion>_questions=[
     SingleQuestion( id:"1",question: "Honesty is a good trait",
         options:[
-          OptionProvider(optionId: 1,optionTitle: "Stongly Agree",marks:2,isSelected: false),
-          OptionProvider(optionId: 2,optionTitle: "Agree",marks:1,isSelected: false),
-          OptionProvider(optionId: 3,optionTitle: "Disagree",marks:1,isSelected: false),
-          OptionProvider(optionId: 4,optionTitle: "Stongly Disagree",marks:0,isSelected: false)],
+          Option(optionId: 1,optionTitle: "Stongly Agree",marks:2,),
+          Option(optionId: 2,optionTitle: "Agree",marks:1,),
+          Option(optionId: 3,optionTitle: "Disagree",marks:1,),
+          Option(optionId: 4,optionTitle: "Stongly Disagree",marks:0,)],
         ),
-    SingleQuestion( id:"2",question: "Cheating if done for success is good",
+    SingleQuestion ( id:"2",question: "Cheating if done for success is good",
         options:[
-          OptionProvider(optionId: 1,optionTitle: "Stongly Agree",marks:1,isSelected: false),
-          OptionProvider(optionId: 2,optionTitle: "Agree",marks:1,isSelected: false),
-          OptionProvider(optionId: 3,optionTitle: "Disagree",marks:2,isSelected: false),
-          OptionProvider(optionId: 4,optionTitle: "Stongly Disagree",marks:0,isSelected: false),],
+          Option(optionId: 1,optionTitle: "Stongly Agree",marks:1,),
+          Option(optionId: 2,optionTitle: "Agree",marks:1,),
+          Option(optionId: 3,optionTitle: "Disagree",marks:2,),
+          Option(optionId: 4,optionTitle: "Stongly Disagree",marks:0,),],
         ),
     SingleQuestion( id:"3",question: "I am an Introvert",
         options:[
-          OptionProvider(optionId: 1,optionTitle: "Stongly Agree",marks:0,isSelected: false),
-          OptionProvider(optionId: 2,optionTitle: "Stongly Agree",marks:0,isSelected: false),
-          OptionProvider(optionId: 3,optionTitle: "Stongly Agree",marks:0,isSelected: false),
-          OptionProvider(optionId: 4,optionTitle: "Stongly Agree",marks:0,isSelected: false),],
+          Option(optionId: 1,optionTitle: "Stongly Agree",marks:0,),
+          Option(optionId: 2,optionTitle: "Agree",marks:0,),
+          Option(optionId: 3,optionTitle: "Disagree",marks:0,),
+          Option(optionId: 4,optionTitle: "Stongly Disagree",marks:0,),],
         ),
     SingleQuestion( id:"4",question: "I am thrill seeking",
         options:[
-          OptionProvider(optionId: 1,optionTitle: "Stongly Agree",marks:0,isSelected: false),
-          OptionProvider(optionId: 2,optionTitle: "Stongly Agree",marks:0,isSelected: false),
-          OptionProvider(optionId: 3,optionTitle: "Stongly Agree",marks:0,isSelected: false),
-          OptionProvider(optionId: 4,optionTitle: "Stongly Agree",marks:0,isSelected: false)],
+          Option(optionId: 1,optionTitle: "Stongly Agree",marks:0,
+              ),
+          Option(optionId: 2,optionTitle: "Stongly Agree",marks:0,),
+          Option(optionId: 3,optionTitle: "Stongly Agree",marks:0,),
+          Option(optionId: 4,optionTitle: "Stongly Agree",marks:0,)],
         ),
   ];
-  List<SingleQuestion> get testQuestions{
+  static List<SingleQuestion> get testQuestions{
     return [..._questions];
    }
-   SingleQuestion  findById(String id){
+   static SingleQuestion  findById(String id){
      SingleQuestion answer =SingleQuestion(id: "null",
          question:"Not Available",options: []);
       for(int i=0;i<_questions.length;i++){
@@ -48,16 +49,16 @@ class Question with ChangeNotifier{
       SingleQuestion quest=findById(questionId);
       for(int i=0;i<quest.options.length;i++){
 
-        quest.options[i].isSelected=false;
+
       }
-      notifyListeners();
+
    }
    int selectedOption(String questionId){
     int index=-1;
      SingleQuestion quest=findById(questionId);
      for(int i=0;i<quest.options.length;i++){
 
-       if(quest.options[i].isSelected==true)index=i;
+
      }
     return index;
    }

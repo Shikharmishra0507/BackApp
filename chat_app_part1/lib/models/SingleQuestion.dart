@@ -1,8 +1,9 @@
-import 'Option.dart';
+import '../Providers/Option.dart';
 class SingleQuestion{
   final String id;
 
   final String question;
-  final List<OptionProvider>options;
+  final List<Option>options;
+
   SingleQuestion({required this.id, required this.question,required this.options });
 }

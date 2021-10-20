@@ -1,6 +1,6 @@
-class HttpException{
+class UserException{
   String message;
-  HttpException(this.message);
+  UserException(this.message);
   String toString(){
     return message;
   }

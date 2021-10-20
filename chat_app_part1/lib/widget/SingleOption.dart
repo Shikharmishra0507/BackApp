@@ -18,11 +18,11 @@ class _SingleOptionState extends State<SingleOption> {
   Color   selectedColor=Colors.green;
   Widget build(BuildContext context) {
 
-    final question = Provider.of<Question>(context, listen: false);
+    final question = Question();
     return Container(
       width: MediaQuery.of(context).size.width*0.2,
       child:Card(
-        color: question.findById(widget.id!).options[widget.index!].isSelected==true?selectedColor :unSelectedColor ,
+        color: selectedColor  ,
         child: ListTile(
           onTap: (){
             setState(() {
@@ -43,9 +43,8 @@ class _SingleOptionState extends State<SingleOption> {
           },
           leading: CircleAvatar(
             backgroundColor:
-            question.findById(widget.id!).options[widget.index!].isSelected==true
-                ?selectedColor : unSelectedColor,),
-          title:Text(question.findById(widget.id!).options[widget.index!].optionTitle!,
+            selectedColor ),
+          title:Text(Question.findById(widget.id!).options[widget.index!].optionTitle!,
               style: TextStyle(fontSize: 20))
           ,),
       ),

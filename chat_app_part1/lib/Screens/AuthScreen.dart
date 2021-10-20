@@ -1,11 +1,11 @@
 import 'dart:math';
 import 'package:chatapppart1/Screens/HomeScreen.dart';
 
-import '../Providers/AuthProvider.dart';
+import '../models/Auth.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import '../models/httpException.dart';
-import 'FirstSignUpPage.dart';
+import '../models/UserException.dart';
+import 'firstSignupScreen.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -103,7 +103,7 @@ class _AuthCardState extends State<AuthCard> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.Login;
   Map<String, String> _authData = {
-    'email': '',
+    'number': '',
     'password': '',
   };
   var _isLoading = false;
@@ -112,7 +112,7 @@ class _AuthCardState extends State<AuthCard> {
   void _submit() async {
     if (!_formKey.currentState!.validate()) {
       // Invalid!
-      print("here");
+
       return;
     }
    // if(_formKey.currentState!.save())
@@ -127,7 +127,7 @@ class _AuthCardState extends State<AuthCard> {
         // Log user in
 
           await auth.logIn(
-              _authData['email'].toString(), _authData['password'].toString());
+              _authData['number'].toString(), _authData['password'].toString());
           Navigator.of(context).pushNamed(HomeScreen.route);
 
 
@@ -135,11 +135,11 @@ class _AuthCardState extends State<AuthCard> {
 
         // Sign user up
         await auth.signUp(
-            _authData['email'].toString(), _authData['password'].toString());
+            _authData['number'].toString(), _authData['password'].toString());
 
         Navigator.of(context).pushNamed(FirstSignUpPage.route,arguments:auth.getUserId );
       }
-    } on HttpException catch (error) {
+    } on Exception catch (error) {
       print("here");
       var errorMessage="Authetication Failed!!";
       if(error.toString().contains("EMAIL_EXISTS")){
@@ -169,18 +169,27 @@ class _AuthCardState extends State<AuthCard> {
     });
   }
 
-  void _switchAuthMode() {
-    if (_authMode == AuthMode.Login) {
-      setState(() {
-        _authMode = AuthMode.Signup;
-      });
-    } else {
-      setState(() {
-        _authMode = AuthMode.Login;
-      });
-    }
+  Widget showSignUpDialog(){
+    return new AlertDialog(
+      title: const Text('Popup example'),
+      content: new Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text("Hello"),
+        ],
+      ),
+      actions: <Widget>[
+        new FlatButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          textColor: Theme.of(context).primaryColor,
+          child: const Text('Close'),
+        ),
+      ],
+    );
   }
-
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
@@ -189,88 +198,58 @@ class _AuthCardState extends State<AuthCard> {
         borderRadius: BorderRadius.circular(10.0),
       ),
       elevation: 8.0,
-      child: Container(
-        height: _authMode == AuthMode.Signup ? 320 : 260,
-        constraints:
-        BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 260),
-        width: deviceSize.width * 0.75,
-        padding: EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'E-Mail'),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-
-                    if(value==null)return 'Email cannot be Empty!!';
-                    if (value.isEmpty || !value.contains('@')) {
-
-                      return 'Invalid email!';
-                    }
-                    return null;
-
-                  },
-                  onSaved: (value) {
-                    _authData['email'] = value.toString();
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Password'),
-                  obscureText: true,
-                  controller: _passwordController,
-                  validator: (value) {
-                    if(value==null)return "Password cannot be Empty";
-                    if (value.isEmpty || value.length < 5) {
-                      return 'Password is too short!';
-                    }
-                  },
-                  onSaved: (value) {
-                    _authData['password'] = value.toString();
-                  },
-                ),
-                if (_authMode == AuthMode.Signup)
+      child: _authMode==AuthMode.Signup ?  showSignUpDialog() : Container(
+        child: Container(
+          height: _authMode == AuthMode.Signup ? 320 : 260,
+          constraints:
+          BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 260),
+          width: deviceSize.width * 0.75,
+          padding: EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
                   TextFormField(
-                    enabled: _authMode == AuthMode.Signup,
-                    decoration: InputDecoration(labelText: 'Confirm Password'),
-                    obscureText: true,
-                    validator: _authMode == AuthMode.Signup
-                        ? (value) {
-                      if (value != _passwordController.text) {
-                        return 'Passwords do not match!';
+                    decoration: InputDecoration(labelText: 'Contact Number'),
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if(value==null)return 'Number cannot be Empty!!';
+                      if (value.isEmpty || value.length!=10) {
+
+                        return 'Invalid Mobile Number';
                       }
-                    }
-                        : null,
+                      return null;
+
+                    },
+                    onSaved: (value) {
+                      _authData['number'] = value.toString();
+                    },
                   ),
-                SizedBox(
-                  height: 20,
-                ),
-                if (_isLoading)
-                  CircularProgressIndicator()
-                else
-                  RaisedButton(
-                    child:
-                    Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
-                    onPressed: _submit,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    padding:
-                    EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
-                    color: Theme.of(context).primaryColor,
-                    textColor: Theme.of(context).primaryColorDark,
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'Password'),
+                    obscureText: true,
+                    controller: _passwordController,
+                    validator: (value) {
+                      if(value==null)return "Password cannot be Empty";
+                      if (value.isEmpty || value.length < 5) {
+                        return 'Password is too short!';
+                      }
+                    },
+                    onSaved: (value) {
+                      _authData['password'] = value.toString();
+                    },
                   ),
-                FlatButton(
-                  child: Text(
-                      '${_authMode == AuthMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
-                  onPressed: _switchAuthMode,
-                  padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  textColor: Theme.of(context).primaryColor,
-                ),
-              ],
+                  ElevatedButton(onPressed: (){}, child: Text("LOGIN")),
+                  TextButton(
+                      onPressed: (){
+                        setState(() {
+                          _authMode=AuthMode.Signup;
+                      });
+                  }, child:Text("Don't have an account , Sign up here" ,
+                    style: TextStyle(fontSize: 6),) )
+                ],
+              ),
             ),
           ),
         ),

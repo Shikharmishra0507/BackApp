@@ -1,7 +1,7 @@
-import 'package:chatapppart1/Providers/AuthProvider.dart';
+import 'models/Auth.dart';
 import 'package:chatapppart1/Providers/UserProvider.dart';
 import 'package:chatapppart1/Screens/AuthScreen.dart';
-import 'package:chatapppart1/Screens/FirstSignUpPage.dart';
+import 'package:chatapppart1/Screens/firstSignupScreen.dart';
 import 'package:chatapppart1/Screens/HomeScreen.dart';
 import 'package:chatapppart1/Screens/TestPage.dart';
 import 'package:provider/provider.dart';
@@ -22,11 +22,11 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create:(_)=>AuthProvider() ),
-        ChangeNotifierProxyProvider<AuthProvider,UserProvider>(
-          create:(BuildContext ctx)=>UserProvider(),
-          update:(BuildContext ctx,auth,prevUser)=>UserProvider()..setToken(auth.getToken)
-        ),
-        ChangeNotifierProvider(create:(_)=>Question() ),
+//        ChangeNotifierProxyProvider<AuthProvider,UserProvider>(
+//          create:(BuildContext ctx)=>UserProvider(),
+//          update:(BuildContext ctx,auth,prevUser)=>UserProvider()..setToken(auth.getToken)
+//        ),
+
         ],
 
         child: Consumer<AuthProvider>(
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
 
           debugShowCheckedModeBanner: false,
 
-          home: TestPage(),
+          home: AuthScreen(),
               routes: {
               TestPage.Route:(_)=>TestPage(),
               HomeScreen.route:(_)=>HomeScreen(),
